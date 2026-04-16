@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Kegiatan Sehari-hari</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            width: 400px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input, select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #4facfe;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #007bff;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            background: #f7f9fc;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        li span {
+            text-align: left;
+        }
+
+        li button {
+            background: #ff4d4d;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        li button:hover {
+            background: #cc0000;
+        }
+
+        #warning {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+    <h2>📋 Kegiatan Harian</h2>
+
+    <div class="input-group">
+        <input type="text" id="kegiatanInput" placeholder="Masukkan kegiatan">
+
+        <select id="hariSelect">
+            <option value="">-- Pilih Hari --</option>
+            <option>Senin</option>
+            <option>Selasa</option>
+            <option>Rabu</option>
+            <option>Kamis</option>
+            <option>Jumat</option>
+            <option>Sabtu</option>
+            <option>Minggu</option>
+        </select>
+
+        <!-- INPUT JAM -->
+        <input type="time" id="jamInput">
+
+        <button onclick="tambahKegiatan()">Tambah</button>
+    </div>
+
+    <p id="warning" style="color:red;"></p>
+
+    <ul id="listKegiatan"></ul>
+</div>
+
+<script>
+    function tambahKegiatan() {
+        let input = document.getElementById("kegiatanInput");
+        let hari = document.getElementById("hariSelect");
+        let jam = document.getElementById("jamInput");
+        let list = document.getElementById("listKegiatan");
+        let warning = document.getElementById("warning");
+
+        if (input.value === "" || hari.value === "" || jam.value === "") {
+            warning.textContent = "Isi kegiatan, hari, dan jam!";
+            return;
+        }
+
+        if (list.children.length >= 8) {
+            warning.textContent = "Maksimal hanya 8 kegiatan!";
+            return;
+        }
+
+        warning.textContent = "";
+
+        let nomor = list.children.length + 1;
+
+        let li = document.createElement("li");
+
+        let span = document.createElement("span");
+        span.textContent = nomor + ". [" + hari.value + " | " + jam.value + "] " + input.value;
+
+        let btnHapus = document.createElement("button");
+        btnHapus.textContent = "Hapus";
+
+        btnHapus.onclick = function() {
+            list.removeChild(li);
+            updateNomor();
+        };
+
+        li.appendChild(span);
+        li.appendChild(btnHapus);
+        list.appendChild(li);
+
+        input.value = "";
+        hari.value = "";
+        jam.value = "";
+    }
+
+    function updateNomor() {
+        let list = document.getElementById("listKegiatan");
+        let items = list.children;
+
+        for (let i = 0; i < items.length; i++) {
+            let text = items[i].querySelector("span").textContent;
+            let bagian = text.substring(text.indexOf("["));
+            items[i].querySelector("span").textContent = (i + 1) + ". " + bagian;
+        }
+    }
+</script>
+
+</body>
+</html>
